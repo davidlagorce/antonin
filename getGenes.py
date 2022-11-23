@@ -17,9 +17,27 @@ def getGenesData(geneXML):
         xml_dict = xmltodict.parse(ini.read())
     return xml_dict
 
+def feedMatrixGenes(matrixGenes , orpha , symbol):
+    if not orpha in matrixGenes:
+        matrixGenes[orpha] = [symbol]
+    else:
+        matrixGenes[orpha].append(symbol)
+    return matrixGenes
 
+def getGenesMatrix(geneData):
+
+    matrixGenes = {}
+    for disorder in geneData["JDBOR"]["DisorderList"]["Disorder"]:
+        orpha = disorder['OrphaCode']
+        if isinstance( disorder['DisorderGeneAssociationList']['DisorderGeneAssociation'], dict):
+            matrixGenes = feedMatrixGenes(matrixGenes , orpha , disorder['DisorderGeneAssociationList']['DisorderGeneAssociation']['Gene']['Symbol'])
+        else:
+            for DisorderGeneAssociation in disorder['DisorderGeneAssociationList']['DisorderGeneAssociation']:
+                matrixGenes = feedMatrixGenes(matrixGenes , orpha , DisorderGeneAssociation['Gene']['Symbol'])
+    return matrixGenes
 
 
 if __name__ == "__main__":
 
     genesData = getGenesData('en_product6.xml')
+    matrixGenes = getGenesMatrix(geneData)
