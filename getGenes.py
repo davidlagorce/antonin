@@ -19,9 +19,9 @@ def getGenesData(geneXML):
 
 def feedMatrixGenes(matrixGenes , orpha , symbol):
     if not orpha in matrixGenes:
-        matrixGenes[orpha] = [symbol]
+        matrixGenes['ORPHA:' + orpha] = [symbol]
     else:
-        matrixGenes[orpha].append(symbol)
+        matrixGenes['ORPHA:' + orpha].append(symbol)
     return matrixGenes
 
 def getGenesMatrix(geneData):
@@ -41,3 +41,5 @@ if __name__ == "__main__":
 
     genesData = getGenesData('en_product6.xml')
     matrixGenes = getGenesMatrix(geneData)
+    
+    print(json.dumps(matrixGenes, indent=2))
